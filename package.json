@@ -1,0 +1,25 @@
+{
+  "name": "yield-active-record",
+  "version": "0.0.1",
+  "description": "Active Record ORM for Yield CMS",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yield-cms/yield-active-record.git"
+  },
+  "keywords": [
+    "yield",
+    "cms",
+    "orm",
+    "sql"
+  ],
+  "author": "Alexander Sychev",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/yield-cms/yield-active-record/issues"
+  },
+  "homepage": "https://github.com/yield-cms/yield-active-record#readme",
+  "dependencies": {
+    "knex": "^0.11.5"
+  }
+}

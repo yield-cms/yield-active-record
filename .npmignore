@@ -1,0 +1,3 @@
+#Swap TypeScript and JavaScript ignore rules for module deployment
+*.ts
+!*.js

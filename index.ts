@@ -1,0 +1,1 @@
+import knex = require('knex');

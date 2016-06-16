@@ -1,5 +1,6 @@
 {
   "globalDependencies": {
+    "bluebird": "registry:dt/bluebird#2.0.0+20160319051630",
     "knex": "registry:dt/knex#0.0.0+20160613144114",
     "node": "registry:dt/node#6.0.0+20160602155235"
   }

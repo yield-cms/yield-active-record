@@ -21,7 +21,7 @@ let _connectionParams : knex.Config;
  * Set connection params
  * @param {knex.Config} connectionParams
  */
-function setConnectionParams(connectionParams : knex.Config) {
+function setConnectionParams(connectionParams : knex.Config) : void {
 	_connectionParams = connectionParams;
 };
 

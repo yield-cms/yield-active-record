@@ -48,6 +48,23 @@ let ActiveRecordMixin = {
 					}
 				);
 		});
+	},
+	getList: function(identifiers : number[]|string[]) {
+		let AR = this;
+		return new Promise(function(resolve, reject) {
+			socketInstance(AR._model.tableName || AR._model.className)
+				.select().whereIn('ID', identifiers).then(
+					function(response : any[]) {
+						var result = response.map(function(item) {
+							return new AR(item);
+						});
+						resolve(new AR(result));
+					},
+					function(error) {
+						reject(error);
+					}
+				);
+		});
 	}
 }
 

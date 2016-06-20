@@ -2,17 +2,30 @@ import dbSocket = require('./db-socket');
 
 let socketInstance = dbSocket.getInstance();
 
+/**
+ * Types of record identifier
+ * @enum {number}
+ */
+enum IdentifierType {
+	COUNTER, //Auto-increment ("serial") numeric key
+	UUID, //UUID string
+	NATURAL //"Natural" key (unique name string)
+}
+
+/**
+ * Simple field types
+ * @enum {number}
+ */
 enum FieldType {
-	COUNTER,
-	UUID,
-	INTEGER,
-	DOUBLE,
-	STRING,
-	TEXT
+	INTEGER, //Integer number
+	DOUBLE, //Double number
+	STRING, //String (String)
+	TEXT //Text (unlimited string)
 }
 
 interface Field {
 	fieldName : string,
+	identifierType : IdentifierType,
 	tableFieldName? : string,
 	type: FieldType
 }
@@ -86,11 +99,25 @@ class ActiveRecord {
 	}
 
 	/**
-	 * Add
+	 * Add Active Record Mixin methods to class as it's static methods
+	 * @static
+	 * @param {function} otherClass
 	 */
 	public static attachAPI(otherClass) {
 		Object.assign(otherClass, ActiveRecordMixin);
 	}
+
+	/**
+	 * Identifier type alias
+	 * @static
+	 */
+	public static IdentifierType = IdentifierType;
+
+	/**
+	 * Field type alias
+	 * @static
+	 */
+	public static FieldType = FieldType;
 };
 
 export = ActiveRecord;

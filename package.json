@@ -7,6 +7,9 @@
     "type": "git",
     "url": "git+https://github.com/yield-cms/yield-active-record.git"
   },
+  "engines": {
+	"node": ">=6.2.2"  
+  },
   "keywords": [
     "yield",
     "cms",

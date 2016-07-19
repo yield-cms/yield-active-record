@@ -9,7 +9,7 @@ let socketInstance = dbSocket.getInstance();
 
 /**
  * Types of record identifier
- * @enum {Number}
+ * @enum {String}
  */
 let IdentifierType = {
     COUNTER: 'COUNTER',
@@ -50,7 +50,7 @@ function ActiveRecord(arClass, model) {
      * @return {Promise}
      */
     arClass.prototype.delete = function() {
-        socketInstance(arClass.name).delete().where('ID', this.ID);
+        return socketInstance(arClass.name).delete().where('ID', this.ID);
     };
 
     //STATIC METHODS
@@ -58,9 +58,11 @@ function ActiveRecord(arClass, model) {
     /**
      * Create new object in database
      * @static
+     * @param {Object} data
+     * @return {Promise}
      */
     arClass.create = function(data) {
-        return new arClass(data);
+        return socketInstance(arClass.name).insert(data);
     };
 
     /**

@@ -8,7 +8,7 @@
     "url": "git+https://github.com/yield-cms/yield-active-record.git"
   },
   "engines": {
-	"node": ">=6.2.2"  
+	"node": ">=6.2.2"
   },
   "keywords": [
     "yield",
@@ -23,6 +23,6 @@
   },
   "homepage": "https://github.com/yield-cms/yield-active-record#readme",
   "dependencies": {
-    "knex": "^0.11.5"
+    "knex": "0.11.5"
   }
 }

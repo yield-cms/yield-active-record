@@ -3,40 +3,42 @@
  * singletone connection instance
  * @author Alexander Sychev <shurik.shurik.1993@yandex.ru>
  */
-import knex = require('knex');
+'use strict';
+
+const knex = require('knex');
 
 /**
  * Connection instance
  * @type {knex}
  */
-let _instance : knex = null;
+let _instance = null;
 
 /**
  * Connection parameters
  * @type {knex.Config}
  */
-let _connectionParams : knex.Config;
+let _connectionParams;
 
 /**
  * Set connection params
  * @param {knex.Config} connectionParams
  */
-function setConnectionParams(connectionParams : knex.Config) : void {
-	_connectionParams = connectionParams;
-};
+function setConnectionParams(connectionParams) {
+    _connectionParams = connectionParams;
+}
 
 /**
  * Create connection instance if it's not exists and return it
  * @returns {knex}
  */
-function getInstance() : knex {
-	if (_instance === null) {
-		_instance = knex(_connectionParams);
-	}
-	return _instance;
+function getInstance() {
+    if (_instance === null) {
+        _instance = knex(_connectionParams);
+    }
+    return _instance;
 }
 
-export = {
-	setConnectionParams: setConnectionParams,
-	getInstance: getInstance
-}
+module.exports = {
+    setConnectionParams: setConnectionParams,
+    getInstance: getInstance
+};

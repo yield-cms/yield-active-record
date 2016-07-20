@@ -28,7 +28,8 @@ let IdentifierType = {
  */
 let FieldType = {
     INTEGER: 'INTEGER',
-    DOUBLE: 'DOUBLE',
+    BOOLEAN: 'BOOLEAN',
+    FLOAT: 'FLOAT',
     STRING: 'STRING',
     TEXT: 'TEXT'
 };
@@ -100,8 +101,8 @@ function ActiveRecord(arClass, model) {
      * @param {Number|String} identifier
      * @return {Promise}
      */
-    arClass.getList = function(identifier) {
-        return this.getList([identifier]).then(function (response) {
+    arClass.getOnce = function(identifier) {
+        return arClass.getList([identifier]).then(function (response) {
             return Promise.resolve(response[0]);
         });
     };
@@ -111,27 +112,47 @@ function ActiveRecord(arClass, model) {
      * @return {Promise}
      */
     arClass.syncronize = function() {
-        return new Promise(function (resolve, reject) {
-            socketInstance.schema.createTableIfNotExists(arClass.name,
-                function (tableBuilder) {
-                    switch (model.identifierType) {
-                        case IdentifierType.COUNTER: {
-                            tableBuilder.bigIncrements('ID');
-                            break;
-                        }
-                        case IdentifierType.UUID: {
-                            tableBuilder.uuid('ID');
-                            break;
-                        }
-                        default: {
-                            tableBuilder.string('ID', 255).primary();
-                        }
-
+        socketInstance.schema.createTableIfNotExists(arClass.name,
+            function (tableBuilder) {
+                switch (model.identifierType) {
+                    case IdentifierType.COUNTER: {
+                        tableBuilder.bigIncrements('ID');
+                        break;
                     }
-                    resolve();
+                    case IdentifierType.UUID: {
+                        tableBuilder.uuid('ID');
+                        break;
+                    }
+                    default: {
+                        tableBuilder.string('ID', 255).primary();
+                    }
                 }
-            );
+            }
+        );
+        model.fields.forEach(function(field) {
+            switch (field.type) {
+                case FieldType.INTEGER: {
+                    tableBuilder.integer(field.name);
+                    break;
+                }
+                case FieldType.BOOLEAN: {
+                    tableBuilder.boolean(field.name);
+                    break;
+                }
+                case FieldType.FLOAT: {
+                    tableBuilder.float(field.name);
+                    break;
+                }
+                case FieldType.STRING: {
+                    tableBuilder.string(field.name, 255);
+                    break;
+                }
+                default: {
+                    tableBuilder.text(field.name);
+                }
+            }
         });
+        return socketInstance.then(Promise.resolve, Promise.reject);
     };
 
 }

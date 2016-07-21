@@ -8,7 +8,7 @@
     "url": "git+https://github.com/yield-cms/yield-active-record.git"
   },
   "engines": {
-	"node": ">=6.2.2"
+    "node": ">=6.2.2"
   },
   "keywords": [
     "yield",
@@ -20,6 +20,9 @@
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/yield-cms/yield-active-record/issues"
+  },
+  "scripts": {
+    "tests": "node tests.js"
   },
   "homepage": "https://github.com/yield-cms/yield-active-record#readme",
   "dependencies": {

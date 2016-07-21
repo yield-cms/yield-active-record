@@ -7,12 +7,6 @@
 const dbSocket = require('./db-socket');
 
 /**
- * Socket instance
- * @type {Knex}
- */
-let socketInstance = dbSocket.getInstance();
-
-/**
  * Types of record identifier
  * @enum {String}
  */
@@ -56,10 +50,20 @@ function ActiveRecord(arClass, model) {
      * @return {Promise}
      */
     arClass.prototype.delete = function() {
-        return socketInstance(arClass.name).delete().where('ID', this.ID);
+        return arClass._socketInstance(arClass.name)
+            .delete().where('ID', this.ID).then(function(response) {
+
+            });
     };
 
-    //STATIC METHODS
+    //STATIC METHODS AND FIELDS
+
+    /**
+     * Database socket static instance
+     * @static
+     * @private
+     */
+    arClass._socketInstance = dbSocket.getInstance();
 
     /**
      * Create new object in database
@@ -69,7 +73,7 @@ function ActiveRecord(arClass, model) {
      */
     arClass.create = function(data) {
         return new Promise(function(resolve, reject) {
-            socketInstance(arClass.name).insert(data).then(function() {
+            arClass._socketInstance(arClass.name).insert(data).then(function() {
                 return Promise.resolve(new arClass(data));
             });
         });
@@ -83,7 +87,7 @@ function ActiveRecord(arClass, model) {
      */
     arClass.getList = function(identifiers) {
         return new Promise(function(resolve, reject) {
-            socketInstance(arClass.name)
+            arClass._socketInstance(arClass.name)
                 .select().whereIn('ID', identifiers).then(function (response) {
                 var result = response.map(function (item) {
                     return new arClass(item);
@@ -112,7 +116,7 @@ function ActiveRecord(arClass, model) {
      * @return {Promise}
      */
     arClass.syncronize = function() {
-        socketInstance.schema.createTableIfNotExists(arClass.name,
+        arClass._socketInstance.schema.createTableIfNotExists(arClass.name,
             function (tableBuilder) {
                 switch (model.identifierType) {
                     case IdentifierType.COUNTER: {
@@ -152,7 +156,7 @@ function ActiveRecord(arClass, model) {
                 }
             }
         });
-        return socketInstance.then(Promise.resolve, Promise.reject);
+        return arClass._socketInstance.then(Promise.resolve, Promise.reject);
     };
 
 }

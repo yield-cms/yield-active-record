@@ -38,22 +38,21 @@ class CActiveRecord {
      * Active record constructor
      * @param {Object} data
      */
-    constructor(data, meta) {
+    constructor(data) {
         Object.defineProperty(this, 'ID', {
             enumerable: false,
             get: () => data.ID,
             set: () => { throw new Error(ActiveRecordErrors.IDENTIFIER_CHANGE) }
         });
-
-        Object.defineProperty(this, '_meta', {
-            enumerable: false,
-            get: () => meta,
-            set: () => { throw new Error(ActiveRecordErrors.METADATA_CHANGE) }
-        });
     }
 
-    static save() {
+    /**
+     * Save object in database
+     * @returns {Promise}
+     */
+    save() {
         let socket = dbSocket.getInstance(),
+            tableName = this.constructor.name,
             newValues = {},
             resultPromise = null;
 
@@ -63,30 +62,28 @@ class CActiveRecord {
 
         if (this.ID !== null && this.ID !== undefined) {
             resultPromise =
-                socket(_meta.tableName).update(newValues).where({ID: this.ID});
+                socket(tableName).update(newValues).where({ID: this.ID});
         } else {
-            resultPromise = socket(_meta.tableName).insert(newValues);
+            resultPromise = socket(tableName).insert(newValues);
         }
 
         return resultPromise;
     }
 
+    /**
+     * Delete object from database
+     * @returns {Promise}
+     */
     delete() {
         let socket = dbSocket.getInstance(),
-            entity = this;
-        socket.delete().where('ID', this.ID).then(function(response) {
-            entity = null;
-        });
+            entity = this,
+            tableName = this.constructor.name;
+        return socket(tableName).delete().where('ID', this.ID)
+            .then(function(response) {
+                entity = null;
+            });
     }
 }
-
-class Test extends CActiveRecord {
-    constructor() {
-        super({ID: 1});
-    }
-}
-
-var t = new Test();
 
 /**
  * Active record class wrapper

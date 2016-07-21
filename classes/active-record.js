@@ -66,6 +66,13 @@ function ActiveRecord(arClass, model) {
     arClass._socketInstance = dbSocket.getInstance();
 
     /**
+     * Model static instance
+     * @static
+     * @private
+     */
+    arClass._model = model;
+
+    /**
      * Create new object in database
      * @static
      * @param {Object} data
@@ -116,47 +123,48 @@ function ActiveRecord(arClass, model) {
      * @return {Promise}
      */
     arClass.syncronize = function() {
-        arClass._socketInstance.schema.createTableIfNotExists(arClass.name,
-            function (tableBuilder) {
-                switch (model.identifierType) {
+        let tablePromise = arClass._socketInstance.schema.createTableIfNotExists(
+            arClass.name,
+            function (table) {
+                switch (arClass._model.identifierType) {
                     case IdentifierType.COUNTER: {
-                        tableBuilder.bigIncrements('ID');
+                        table.bigIncrements('ID');
                         break;
                     }
                     case IdentifierType.UUID: {
-                        tableBuilder.uuid('ID');
+                        table.uuid('ID');
                         break;
                     }
                     default: {
-                        tableBuilder.string('ID', 255).primary();
+                        table.string('ID', 255).primary();
                     }
                 }
+                arClass._model.fields.forEach(function(field) {
+                    switch (field.type) {
+                        case FieldType.INTEGER: {
+                            table.integer(field.name);
+                            break;
+                        }
+                        case FieldType.BOOLEAN: {
+                            table.boolean(field.name);
+                            break;
+                        }
+                        case FieldType.FLOAT: {
+                            table.float(field.name);
+                            break;
+                        }
+                        case FieldType.STRING: {
+                            table.string(field.name, 255);
+                            break;
+                        }
+                        default: {
+                            table.text(field.name);
+                        }
+                    }
+                });
             }
         );
-        model.fields.forEach(function(field) {
-            switch (field.type) {
-                case FieldType.INTEGER: {
-                    tableBuilder.integer(field.name);
-                    break;
-                }
-                case FieldType.BOOLEAN: {
-                    tableBuilder.boolean(field.name);
-                    break;
-                }
-                case FieldType.FLOAT: {
-                    tableBuilder.float(field.name);
-                    break;
-                }
-                case FieldType.STRING: {
-                    tableBuilder.string(field.name, 255);
-                    break;
-                }
-                default: {
-                    tableBuilder.text(field.name);
-                }
-            }
-        });
-        return arClass._socketInstance.then(Promise.resolve, Promise.reject);
+        return tablePromise;
     };
 
 }

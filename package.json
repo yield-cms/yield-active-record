@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/yield-cms/yield-active-record#readme",
   "dependencies": {
-    "knex": "0.11.5"
+    "knex": "0.11.5",
+    "mysql": "2.11.1"
   }
 }

@@ -13,10 +13,14 @@ let ActiveRecordErrors = {
     NO_CONNECTION_PARAMS: (
         'ActiveRecord Critical Error #001: ' +
         'Database connection parameters is not defined'
-    )
+    ),
     IDENTIFIER_CHANGE: (
         'ActiveRecord Critical Error #002: ' +
         'Identifier field ("ID") of ActiveRecord cannot be changed'
+    ),
+    METADATA_CHANGE: (
+        'ActiveRecord Critical Error #003: ' +
+        'Metadata field ("_meta") of ActiveRecord cannot be changed'
     )
 };
 

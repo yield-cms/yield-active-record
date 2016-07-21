@@ -17,7 +17,7 @@ let _instance = null;
  * Connection parameters
  * @type {knex.Config}
  */
-let _connectionParams;
+let _connectionParams = null;
 
 /**
  * Set connection params
@@ -33,7 +33,12 @@ function setConnectionParams(connectionParams) {
  */
 function getInstance() {
     if (_instance === null) {
-        _instance = knex(_connectionParams);
+        if (_connectionParams !== null) {
+            _instance = knex(_connectionParams);
+        } else {
+            throw new Error('Database connection parameters is not defined');
+        }
+
     }
     return _instance;
 }

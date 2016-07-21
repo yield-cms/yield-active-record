@@ -6,6 +6,7 @@
 'use strict';
 
 const knex = require('knex');
+const ActiveRecordErrors = require('./active-record-errors');
 
 /**
  * Connection instance
@@ -36,7 +37,7 @@ function getInstance() {
         if (_connectionParams !== null) {
             _instance = knex(_connectionParams);
         } else {
-            throw new Error('Database connection parameters is not defined');
+            throw new Error(ActiveRecordErrors.NO_CONNECTION_PARAMS);
         }
 
     }

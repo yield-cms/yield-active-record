@@ -16,6 +16,12 @@ class User {
     constructor(data) {
         this.login = data.login;
     }
+    setLogin(login) {
+        this.login = login;
+    }
+    getLogin() {
+        return this.login;
+    }
 }
 
 console.log('User as active record');
@@ -31,8 +37,9 @@ console.log('begin syncronize');
 
 User.syncronize().then(function(response) {
     console.log('SUCCESS');
-    console.log(response);
+    User.getOnce(1).then(function(user) {
+        console.log('OLD LOGIN: '  + user.getLogin());
+    });
 }, function(error) {
-    console.log('SUCCESS');
-    console.log(error);
+    console.log('FAIL');
 });

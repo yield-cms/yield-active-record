@@ -5,6 +5,7 @@
 
 "use strict";
 const dbSocket = require('./db-socket');
+const ActiveRecordErrors = require('./active-record-errors');
 
 /**
  * Types of record identifier
@@ -27,6 +28,43 @@ let FieldType = {
     STRING: 'STRING',
     TEXT: 'TEXT'
 };
+
+/**
+ * Active record class
+ * @abstract
+ */
+class CActiveRecord {
+    /**
+     * Active record constructor
+     * @param {Object} data
+     */
+    constructor(data) {
+        Object.defineProperty(this, 'ID', {
+            value: data.ID ? data.ID : null,
+            get: () => ID,
+            set: () => throw new Error(ActiveRecordErrors.IDENTIFIER_CHANGE);
+        });
+    }
+
+    save() {
+        let socket = dbSocket.getInstance();
+
+        if (this.ID !== null) {
+            socket.update()
+            //UPDATE operation
+        } else {
+            socket.insert()
+            //INSERT operation
+        }
+    }
+
+    delete() {
+        let socket = dbSocket.getInstance();
+        socket.delete().where('ID', this.ID).then(function(response) {
+            this = null;
+        }.bind(this));
+    }
+}
 
 /**
  * Active record class wrapper

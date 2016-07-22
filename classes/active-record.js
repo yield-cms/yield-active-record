@@ -6,28 +6,9 @@
 "use strict";
 const dbSocket = require('./db-socket');
 const ActiveRecordErrors = require('./active-record-errors');
+const IdentifierType = require('./identifier-type');
+const FieldType = require('./field-type');
 
-/**
- * Types of record identifier
- * @enum {String}
- */
-let IdentifierType = {
-    COUNTER: 'COUNTER',
-    UUID: 'UUID',
-    NATURAL: 'NATURAL'
-};
-
-/**
- * Types of fields
- * @enum {String}
- */
-let FieldType = {
-    INTEGER: 'INTEGER',
-    BOOLEAN: 'BOOLEAN',
-    FLOAT: 'FLOAT',
-    STRING: 'STRING',
-    TEXT: 'TEXT'
-};
 
 /**
  * Active record class

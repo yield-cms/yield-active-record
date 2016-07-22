@@ -142,18 +142,9 @@ class Dependency {
      * @param {Object} secondClassColumn
      */
     _indexing(tableObject, firstClassColumn, secondClassColumn) {
-        switch (this.dependencyType) {
-            case DependencyType.ONE_TO_ONE: {
-                tableObject.primary([firstClassColumn, secondClassColumn]);
-                break;
-            }
-            case DependencyType.ONE_TO_MANY: {
-                break;
-            }
-            default: {
-                tableObject.primary([firstClassColumn, secondClassColumn]);
-            }
-
+        tableObject.primary([firstClassColumn, secondClassColumn]);
+        if (this.dependencyType !== DependencyType.MANY_TO_MANY) {
+            secondClassColumn.unique();
         }
     }
 }

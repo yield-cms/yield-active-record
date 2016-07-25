@@ -1,2 +1,2 @@
-# yield-active-record
-Active Record ORM for Yield CMS
+# yield-storage
+Yield Storage - ORM-like module with objects storaging algorythms.
